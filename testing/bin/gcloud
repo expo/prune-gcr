@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# This is a minimal gcloud stub that we use for testing. We exclude
+# the real gcloud program and GCP itself from our test unit.
+
+if [ "$1" = 'config' ]; then
+  if [ "$2" = 'get-value' ] && [ "$3" = 'project' ]; then
+    echo 'test-project'
+    exit 0
+  fi
+elif [ "$1" = 'container' ]; then
+  if [ "$2" = 'images' ] && [ "$3" = 'list-tags' ]; then
+    if [ "$4" = 'gcr.io/test-project/empty' ]; then
+      echo '[]'
+    else
+      cat "$(dirname "$0")/../mock-gcr-image-tags.json"
+    fi
+    exit 0
+  elif [ "$2" = 'images' ] && [ "$3" = 'delete' ]; then
+    exit 0
+  fi
+fi
+
+# Fail on unstubbed commands by default
+exit 1
