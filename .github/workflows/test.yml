@@ -1,0 +1,33 @@
+name: Tests
+on: push
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.x
+    - name: Install pip
+      run: python -m pip install --upgrade pip
+    - name: Install Black
+      run: pip install 'black==19.10b0'
+    - name: Check formatting
+      run: black --check --target-version py27 prune-gcr
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '2.7'
+    - name: Use a stub for gcloud in subsequent steps
+      run: echo '::add-path::${{ github.workspace }}/testing/bin'
+    - name: Test the help text
+      run: echo $PATH && ./prune-gcr --help
+    - name: Run the script end-to-end with a mock repository
+      run: ./prune-gcr test-project
+    - name: Test a mock empty repository
+      run: ./prune-gcr empty
+      

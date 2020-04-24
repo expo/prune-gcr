@@ -22,7 +22,7 @@ def main():
         default=default_project,
         help="name of the Google Cloud project. {}".format(
             "Defaults to {}.".format(default_project)
-            if default_project is None
+            if default_project is not None
             else "Must be specified."
         ),
     )
