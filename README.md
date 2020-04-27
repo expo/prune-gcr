@@ -7,7 +7,7 @@ A little script to prune old Docker images from the Google Container Registry.
 
 The script requires Python 2.7. You can run it with `./prune-gcr --project <project> <repository>`. If `--project` is not specified, it will attempt to infer the default project from your gcloud configuration.
 
-```sh
+```
 usage: prune-gcr [-h] [--project PROJECT] [--older-than CUTOFF]
                  [--keep-at-least N]
                  repository
