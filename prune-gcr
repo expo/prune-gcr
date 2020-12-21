@@ -116,7 +116,7 @@ def last_index_older_than(entries, older_than):
     # backwards to find the first one older than the specified date
     for index, entry in reversed(list(enumerate(entries))):
         # Reformat the timestamp so Python can parse it
-        timestamp = re.sub(r"-(\d\d):(\d\d)$", r"", entry["timestamp"]["datetime"])
+        timestamp = re.sub(r"[-+](\d\d):(\d\d)$", r"", entry["timestamp"]["datetime"])
         entry_time = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").date()
         if entry_time < older_than:
             return index + 1
