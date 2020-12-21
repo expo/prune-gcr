@@ -47,7 +47,7 @@ def main():
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="actually don't remove the old images, just print them",
+        help="don't actually remove the old images, just print them",
     )
     args = parser.parse_args()
 
