@@ -23,11 +23,10 @@ jobs:
       with:
         python-version: '2.7'
     - name: Use a stub for gcloud in subsequent steps
-      run: echo '::add-path::${{ github.workspace }}/testing/bin'
+      run: echo "${{ github.workspace }}/testing/bin" >> $GITHUB_PATH
     - name: Test the help text
       run: echo $PATH && ./prune-gcr --help
     - name: Run the script end-to-end with a mock repository
-      run: ./prune-gcr test-project
+      run: ./prune-gcr --project test-project mock-repository
     - name: Test a mock empty repository
-      run: ./prune-gcr empty
-      
+      run: ./prune-gcr --project test-project empty
