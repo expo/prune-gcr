@@ -44,6 +44,11 @@ def main():
         metavar="N",
         help="keep at least N images, even if they are older than the cutoff date. Defaults to 50.",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="actually don't remove the old images, just print them",
+    )
     args = parser.parse_args()
 
     repository = "gcr.io/{project}/{name}".format(
@@ -54,7 +59,13 @@ def main():
         repository, args.older_than, keep_at_least=args.keep_at_least
     )
 
-    delete_images(repository, digests)
+    if args.dry_run:
+        if len(digests) > 0:
+            print "This is a dry run mode. Run without --dry-run to remove the following images:"
+        for digest in digests:
+            print "- {}".format(digest)
+    else:
+        delete_images(repository, digests)
 
 
 def get_default_project():
