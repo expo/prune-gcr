@@ -44,6 +44,11 @@ def main():
         metavar="N",
         help="keep at least N images, even if they are older than the cutoff date. Defaults to 50.",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="don't actually remove the old images, just print them",
+    )
     args = parser.parse_args()
 
     repository = "gcr.io/{project}/{name}".format(
@@ -54,7 +59,13 @@ def main():
         repository, args.older_than, keep_at_least=args.keep_at_least
     )
 
-    delete_images(repository, digests)
+    if args.dry_run:
+        if len(digests) > 0:
+            print "This is a dry run mode. Run without --dry-run to remove the following images:"
+        for digest in digests:
+            print "- {}".format(digest)
+    else:
+        delete_images(repository, digests)
 
 
 def get_default_project():
@@ -116,7 +127,7 @@ def last_index_older_than(entries, older_than):
     # backwards to find the first one older than the specified date
     for index, entry in reversed(list(enumerate(entries))):
         # Reformat the timestamp so Python can parse it
-        timestamp = re.sub(r"-(\d\d):(\d\d)$", r"", entry["timestamp"]["datetime"])
+        timestamp = re.sub(r"[-+](\d\d):(\d\d)$", r"", entry["timestamp"]["datetime"])
         entry_time = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").date()
         if entry_time < older_than:
             return index + 1
